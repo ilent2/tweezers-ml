@@ -14,6 +14,10 @@ spherical particle in a tightly focussed laser beam.
 The forces are calculated using a pre-trained artificial
 neural network, allowing for fast and accurate execution
 in-browser (on your phone or personal computer).
+The simulation using a finite difference method to simulate
+particle dynamics, accuracy of this method depends on
+simulation parameters, not all simulation parameters will
+produce physically accurate results.
 Training data was generated using the
 [optical tweezers toolbox](https://github.com/ilent2/ott).
 We used [Keras](https://keras.io/)

@@ -21,6 +21,7 @@
 <!-- End Jekyll SEO tag -->
 
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/site.css">
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
@@ -32,6 +33,65 @@
       <h2>Simulation</h2>
 
       <div id="sim-container">
+      </div>
+
+      <div id="controls">
+        <div class="row">
+          <button id="button-start-stop">Stop</button>
+          <button id="button-reset">Reset</button>
+        </div>
+        <div class="row">
+          <span class="text">Time step</span>
+          <input type="range" min="1" max="100" value="50"
+              class="slider" id="slider-step">
+        </div>
+        <div class="row">
+          <span class="text">Temperature</span>
+          <input type="range" min="1" max="100" value="50"
+              class="slider" id="slider-temperature">
+        </div>
+        <div class="row">
+          <span class="text">Radius</span>
+          <input type="range" min="1" max="100" value="50"
+              class="slider" id="slider-radius">
+        </div>
+        <div class="row">
+          <span class="text">Index</span>
+          <input type="range" min="1" max="100" value="50"
+              class="slider" id="slider-index">
+        </div>
+        <div class="row">
+          <span class="text">Power</span>
+          <input type="range" min="1" max="100" value="50"
+              class="slider" id="slider-power">
+        </div>
+        <div class="row">
+          <span class="text">
+            <label for="toggle-particle">Show particle</label>
+          </span>
+          <label class="switch" for="toggle-particle">
+            <input type="checkbox" id="toggle-particle">
+            <span class="chkslider"></span>
+          </label>
+        </div>
+        <div class="row">
+          <span class="text">
+            <label for="toggle-trace">Show trace</label>
+          </span>
+          <label class="switch" for="toggle-trace">
+            <input type="checkbox" id="toggle-trace">
+            <span class="chkslider"></span>
+          </label>
+        </div>
+        <div class="row">
+          <span class="text">
+            <label for="toggle-beam">Show incident beam</label>
+          </span>
+          <label class="switch" for="toggle-beam">
+            <input type="checkbox" id="toggle-beam">
+            <span class="chkslider"></span>
+          </label>
+        </div>
       </div>
 
       <script src="./scripts/three.js"></script>

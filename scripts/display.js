@@ -31,7 +31,7 @@
       var inputPower = document.getElementById('slider-power');
 
       var inputDrawParticle = document.getElementById('toggle-particle');
-      var inputDrawTrace = document.getElementById('toggle-trace');
+      //var inputDrawTrace = document.getElementById('toggle-trace');
       var inputDrawBeam = document.getElementById('toggle-beam');
 
       var objParticle;
@@ -43,10 +43,10 @@
         objParticle.visible = e.srcElement.checked;
         render();
       });
-      inputDrawTrace.addEventListener('input', function(e) {
-        objTrace.visible = e.srcElement.checked;
-        render();
-      });
+      //inputDrawTrace.addEventListener('input', function(e) {
+      //  objTrace.visible = e.srcElement.checked;
+      //  render();
+      //});
       inputDrawBeam.addEventListener('input', function(e) {
         objBeam.visible = e.srcElement.checked;
         render();

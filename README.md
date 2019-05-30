@@ -32,6 +32,7 @@ The initial version of this simulation is for a demonstration at a
 conference.  There are a few other things we could add to make the
 demonstration more useful:
 
+ * Show the particle trace/trajectory
  * Additional pre-trained neural networks
  * More general neural networks
  * Ability to upload a custom neural network

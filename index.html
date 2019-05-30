@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+
 <title>tweezers-ml | Interactive Optical Tweezers simulation using Machine Learning</title>
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
@@ -30,9 +32,11 @@
       <h1 id="tweezers-ml">tweezers-ml</h1>
 <p>Interactive Optical Tweezers simulation using Machine Learning</p>
 
-      <h2>Simulation</h2>
+      <h2 id="simulation">Simulation</h2>
 
-      <div id="sim-container">
+      <div class="sim" id="sim">
+        <div id="sim-container"></div>
+        <span class="info" id="sim-info"></span>
       </div>
 
       <div id="controls">
@@ -42,7 +46,7 @@
         </div>
         <div class="row">
           <span class="text">Time step</span>
-          <input type="range" min="1" max="100" value="50"
+          <input type="range" min="1" max="100" value="40"
               class="slider" id="slider-step">
         </div>
         <div class="row">

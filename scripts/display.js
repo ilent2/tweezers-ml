@@ -19,6 +19,8 @@
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
+      var infoText = document.getElementById('sim-info');
+
       var inputStartStop = document.getElementById('button-start-stop');
       var inputReset = document.getElementById('button-reset');
 
@@ -49,6 +51,140 @@
         objBeam.visible = e.srcElement.checked;
         render();
       });
+
+      var bRunning = true;
+      inputStartStop.onclick = function(e) {
+        if (bRunning) {
+          inputStartStop.innerText = "Start";
+          bRunning = false;
+        } else {
+          inputStartStop.innerText = "Stop";
+          bRunning = true;
+        }
+      };
+
+      var wavelength = 1064e-9/1.33;
+
+      var position = [0, 0, 0];
+      var temperature = 178;
+      var dt = 3.98e-5;
+      var radius = 3.16e-1;
+      var power = 0.051;
+      var index = 1.67;
+
+      inputReset.onclick = function() {
+	position = [0, 0, 0];
+
+	// Update the scene
+	objParticle.position.x = position[0]*scale;
+	objParticle.position.y = position[1]*scale;
+	objParticle.position.z = position[2]*scale;
+	render();
+      };
+
+      function updateInfo() {
+        infoText.innerHTML = `dt = ${dt.toExponential(2)}s, T = ${temperature.toFixed(0)}K, R = ${radius.toFixed(2)}&mu;m, n = ${index.toFixed(2)}, P = ${power.toFixed(3)}W`;
+      }
+//updateInfo();
+
+      var inputStep = document.getElementById('slider-step');
+      var inputTemperature = document.getElementById('slider-temperature');
+      var inputRadius = document.getElementById('slider-radius');
+      var inputIndex = document.getElementById('slider-index');
+      var inputPower = document.getElementById('slider-power');
+
+      inputStep.addEventListener('input', function(e) {
+        dt = Math.pow(10, 4*(e.srcElement.value/100.0)-6);
+        updateInfo();
+      });
+      inputTemperature.addEventListener('input', function(e) {
+        temperature = Math.pow(10, 1 + 2.5*(e.srcElement.value/100.0));
+        updateInfo();
+      });
+      inputRadius.addEventListener('input', function(e) {
+        radius = Math.pow(10, -1 + (e.srcElement.value/100.0));
+	objParticle.scale.x = radius;
+	objParticle.scale.y = radius;
+	objParticle.scale.z = radius;
+        updateInfo();
+      });
+      inputIndex.addEventListener('input', function(e) {
+        index = 1.33 + (e.srcElement.value/100.0)*(2.0-1.33);
+        updateInfo();
+      });
+      inputPower.addEventListener('input', function(e) {
+        power = 0.001 + 0.1*(e.srcElement.value/100.0);
+        updateInfo();
+      });
+
+      var time = 0;
+      var kb = 1.38064852e-23;  // [m^2 kg/s^2/K]
+      var eta = 0.001;          // Water Viscosity Ns/m/m
+
+      function randn_bm() {
+	  var u = 0, v = 0;
+	  while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+	  while(v === 0) v = Math.random();
+	  return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+      }
+
+      // Not sure if I'm doing the right thing here
+      var model;
+      tf.loadLayersModel(
+	  'https://ilent2.github.io/tweezers-ml/networks/nn5dof_size_ri/model.json').then(function(result) { model = result; });
+
+      function force_method() {
+
+	if (typeof model === 'undefined') {
+	  return [0, 0, 0];
+	}
+
+	var prediction = model.predict(tf.tensor2d([
+	  position[0]*1e6, position[1]*1e6, position[2]*1e6,
+	  radius, index], [1, 5]));
+	prediction = prediction.dataSync();
+
+	for (var i = 0; i < 3; i++) {
+	  prediction[i] *= Math.pow(radius, 2) *
+	      (index-1.33) * power / 3.0e8;
+	}
+
+	//console.log(prediction);
+	return prediction;
+      }
+
+      var scale = 200/wavelength;
+
+      function updateScene() {
+
+	if (bRunning) {
+
+	  time = time + dt;
+
+	  // Calculate the force at this location [N]
+	  force = force_method();
+  
+	  // Calculate drag (function of radius)
+	  Gt = 6*Math.PI*eta*(radius*1e-6);
+
+	  for (var i = 0; i < 3; i++) {
+	    // Calculate change in position (force contribution)
+	    dx = force[i]*dt/Gt;
+
+	    // Calculate change in position (Brownian motion contribution)
+	    dx = dx + Math.sqrt(2*kb*temperature*dt/Gt)*randn_bm();
+
+	    // Move the particle (store position)
+	    position[i] = position[i] + dx;
+	  }
+
+	  // Update the scene
+	  objParticle.position.x = position[0]*scale;
+	  objParticle.position.z = position[1]*scale;
+	  objParticle.position.y = position[2]*scale;
+	  render();
+	}
+      }
 
       init();
 			animate();
@@ -101,10 +237,12 @@
 				//scene.add( shadowMesh );
 
         // Draw the sphere
-        var radius = 200;
-        var geometry = new THREE.SphereGeometry( radius, 32, 32 );
+        var geometry = new THREE.SphereGeometry( 200, 32, 32 );
         //var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         objParticle = new THREE.Mesh( geometry, shadowMaterial );
+	objParticle.scale.x = radius;
+	objParticle.scale.y = radius;
+	objParticle.scale.z = radius;
         scene.add( objParticle );
 
         // Draw the beam
@@ -149,51 +287,6 @@
         objTrace.visible = false;  // Initially invisible
         scene.add( objTrace );
 
-				var radius = 200;
-				var geometry1 = new THREE.IcosahedronBufferGeometry( radius, 1 );
-				var count = geometry1.attributes.position.count;
-				geometry1.addAttribute( 'color', new THREE.BufferAttribute( new Float32Array( count * 3 ), 3 ) );
-				var geometry2 = geometry1.clone();
-				var geometry3 = geometry1.clone();
-				var color = new THREE.Color();
-				var positions1 = geometry1.attributes.position;
-				var positions2 = geometry2.attributes.position;
-				var positions3 = geometry3.attributes.position;
-				var colors1 = geometry1.attributes.color;
-				var colors2 = geometry2.attributes.color;
-				var colors3 = geometry3.attributes.color;
-				for ( var i = 0; i < count; i ++ ) {
-					color.setHSL( ( positions1.getY( i ) / radius + 1 ) / 2, 1.0, 0.5 );
-					colors1.setXYZ( i, color.r, color.g, color.b );
-					color.setHSL( 0, ( positions2.getY( i ) / radius + 1 ) / 2, 0.5 );
-					colors2.setXYZ( i, color.r, color.g, color.b );
-					color.setRGB( 1, 0.8 - ( positions3.getY( i ) / radius + 1 ) / 2, 0 );
-					colors3.setXYZ( i, color.r, color.g, color.b );
-				}
-				var material = new THREE.MeshPhongMaterial( {
-					color: 0xffffff,
-					flatShading: true,
-					vertexColors: THREE.VertexColors,
-					shininess: 0
-				} );
-
-				var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } );
-				var mesh = new THREE.Mesh( geometry1, material );
-				var wireframe = new THREE.Mesh( geometry1, wireframeMaterial );
-				mesh.add( wireframe );
-				mesh.position.x = - 400;
-				mesh.rotation.x = - 1.87;
-				//scene.add( mesh );
-				var mesh = new THREE.Mesh( geometry2, material );
-				var wireframe = new THREE.Mesh( geometry2, wireframeMaterial );
-				mesh.add( wireframe );
-				mesh.position.x = 400;
-				//scene.add( mesh );
-				var mesh = new THREE.Mesh( geometry3, material );
-				var wireframe = new THREE.Mesh( geometry3, wireframeMaterial );
-				mesh.add( wireframe );
-				//scene.add( mesh );
-
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( width, height );
@@ -205,6 +298,9 @@
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				//
 				window.addEventListener( 'resize', onWindowResize, false );
+
+      // Start updating the scene
+      setInterval(updateScene, 100);
 			}
 
 			function onWindowResize() {

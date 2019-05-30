@@ -5,6 +5,18 @@
   padding: 3px;
 }*/
 
+.sim {
+  position: relative;
+  display: block;
+}
+
+.sim .info {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  right: 5px;
+}
+
 #sim-container {
   border-style: none;
   border-color: black;

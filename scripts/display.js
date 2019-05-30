@@ -85,7 +85,7 @@
       function updateInfo() {
         infoText.innerHTML = `dt = ${dt.toExponential(2)}s, T = ${temperature.toFixed(0)}K, R = ${radius.toFixed(2)}&mu;m, n = ${index.toFixed(2)}, P = ${power.toFixed(3)}W`;
       }
-//updateInfo();
+      updateInfo();  // Display the initial info
 
       var inputStep = document.getElementById('slider-step');
       var inputTemperature = document.getElementById('slider-temperature');

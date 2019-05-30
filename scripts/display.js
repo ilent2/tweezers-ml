@@ -39,18 +39,18 @@
       var objBeam;
 
       // Connect up the toggles
-      inputDrawParticle.addEventListener('input', function(e) {
+      inputDrawParticle.onchange = function(e) {
         objParticle.visible = e.srcElement.checked;
         render();
-      });
+      };
       //inputDrawTrace.addEventListener('input', function(e) {
       //  objTrace.visible = e.srcElement.checked;
       //  render();
       //});
-      inputDrawBeam.addEventListener('input', function(e) {
+      inputDrawBeam.onchange = function(e) {
         objBeam.visible = e.srcElement.checked;
         render();
-      });
+      };
 
       var bRunning = true;
       inputStartStop.onclick = function(e) {

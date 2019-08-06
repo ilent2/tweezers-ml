@@ -325,8 +325,9 @@
 				//stats.update();
 			}
 			function render() {
-				camera.position.x += ( mouseX - camera.position.x ) * 0.2;
-				camera.position.y += ( - mouseY - camera.position.y ) * 0.2;
+				// Disabled for now, was a bit confusing
+				//camera.position.x += ( mouseX - camera.position.x ) * 0.2;
+				//camera.position.y += ( - mouseY - camera.position.y ) * 0.2;
 				camera.lookAt( scene.position );
 				renderer.render( scene, camera );
 			}

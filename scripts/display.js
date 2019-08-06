@@ -20,6 +20,7 @@
 			var windowHalfY = window.innerHeight / 2;
 
       var infoText = document.getElementById('sim-info');
+      var infoPosition = document.getElementById('sim-info-position');
 
       var inputStartStop = document.getElementById('button-start-stop');
       var inputReset = document.getElementById('button-reset');
@@ -183,6 +184,9 @@
 	  objParticle.position.z = position[1]*scale;
 	  objParticle.position.y = position[2]*scale;
 	  render();
+    
+    // Update infoPosition text
+    infoPosition.innerHTML = `x = ${objParticle.position.x*1e6}, ${objParticle.position.y*1e6}, ${objParticle.position.z*1e6} &mu;m <br>F = ${force[0]}, ${force[1]}, ${force[2]} N`;
 	}
       }
 

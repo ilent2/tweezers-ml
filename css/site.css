@@ -12,9 +12,16 @@
 
 .sim .info {
   position: absolute;
-  top: 4px;
   left: 5px;
   right: 5px;
+}
+
+.sim .info #sim-info {
+  top: 4px;
+}
+
+.sim .info #sim-info-position {
+  bottom: 4px;
 }
 
 #sim-container {

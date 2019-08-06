@@ -186,7 +186,7 @@
 	  render();
     
     // Update infoPosition text
-    infoPosition.innerHTML = `x = ${objParticle.position.x*1e6}, ${objParticle.position.y*1e6}, ${objParticle.position.z*1e6} &mu;m <br>F = ${force[0]}, ${force[1]}, ${force[2]} N`;
+    infoPosition.innerHTML = `x = ${(position[0]*1e6).toFixed(2)}, ${(position[1]*1e6).toFixed(2)}, ${(position[2]*1e6).toFixed(2)} &mu;m <br>F = ${(force[0]*1e12).toFixed(2)}, ${(force[1]*1e12).toFixed(2)}, ${(force[2]*1e12).toFixed(2)} pN`;
 	}
       }
 

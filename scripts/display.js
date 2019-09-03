@@ -13,6 +13,7 @@
 
       var container;
 
+      var raycaster = new THREE.Raycaster();
       var camera, scene, renderer;
 
 			var mouseX = 0, mouseY = 0;
@@ -156,6 +157,17 @@
 
       var scale = 200/wavelength;
 
+  function updateSceneDraw() {
+	  // Update the scene
+	  objParticle.position.x = position[0]*scale;
+	  objParticle.position.z = position[1]*scale;
+	  objParticle.position.y = position[2]*scale;
+	  render();
+
+    // Update infoPosition text
+    infoPosition.innerHTML = `x = ${(position[0]*1e6).toFixed(2)}, ${(position[1]*1e6).toFixed(2)}, ${(position[2]*1e6).toFixed(2)} &mu;m <br>F = ${(force[0]*1e12).toFixed(2)}, ${(force[1]*1e12).toFixed(2)}, ${(force[2]*1e12).toFixed(2)} pN`;
+  }
+
       function updateScene() {
 
 	if (bRunning) {
@@ -179,14 +191,9 @@
 	    position[i] = position[i] + dx;
 	  }
 
-	  // Update the scene
-	  objParticle.position.x = position[0]*scale;
-	  objParticle.position.z = position[1]*scale;
-	  objParticle.position.y = position[2]*scale;
-	  render();
-    
-    // Update infoPosition text
-    infoPosition.innerHTML = `x = ${(position[0]*1e6).toFixed(2)}, ${(position[1]*1e6).toFixed(2)}, ${(position[2]*1e6).toFixed(2)} &mu;m <br>F = ${(force[0]*1e12).toFixed(2)}, ${(force[1]*1e12).toFixed(2)}, ${(force[2]*1e12).toFixed(2)} pN`;
+    // Update particle position and text
+    updateSceneDraw();
+
 	}
       }
 
@@ -303,6 +310,11 @@
 				//
 				window.addEventListener( 'resize', onWindowResize, false );
 
+        // Add mouse click listener to change particle position
+        renderer.domElement.addEventListener('mousedown', function(e) {
+          onCanvasMouseDown(renderer.domElement, e);
+        })
+
       // Start updating the scene
       setInterval(updateScene, 100);
 			}
@@ -322,6 +334,29 @@
 				mouseX = ( event.clientX - windowHalfX );
 				mouseY = ( event.clientY - windowHalfY );
 			}
+
+      // Change particle position from click event
+      function onCanvasMouseDown(canvas, event) {
+
+        // Get particle position in canvas (SO: a/18053642)
+        const rect = canvas.getBoundingClientRect()
+        const x = 2*(event.clientX - rect.left - windowHalfX)/canvas.width;
+        const y = 2*(-(event.clientY - rect.top) + windowHalfY)/canvas.height;
+
+        // Apply camera perspective to point
+        var plane = new THREE.Plane(new THREE.Vector3(0,0,1));
+        raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+        var intersects = new THREE.Vector3();
+        raycaster.ray.intersectPlane(plane, intersects);
+
+        // Convert to simulation coordinates and update particle position
+        position[0] = intersects.x/scale;
+        position[1] = 0;
+        position[2] = intersects.y/scale;
+
+        // Update the scene (even when stopped)
+        updateSceneDraw();
+      }
 			//
 			function animate() {
 				requestAnimationFrame( animate );

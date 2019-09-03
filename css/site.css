@@ -13,7 +13,9 @@
 .sim .info {
   position: absolute;
   left: 5px;
-  right: 5px;
+  /*right: 5px;*/
+  padding: 1px 5px 1px 5px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .sim #sim-info {

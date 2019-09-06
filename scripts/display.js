@@ -74,6 +74,34 @@
       var power = 0.051;
       var index = 1.67;
 
+      // Variables for trap stiffness estimation
+      //const numStiffPoints = 100;
+      //var currStiffPoint = 0;
+      //var lastForces = new Array(numStiffPoints*3);
+      //var lastPositions = new Array(numStiffPoints*3);
+
+      function calculateStiffness() {
+        // Calculate trap stiffness from last numStiffPoints
+
+        kx = 0;
+        ky = 0;
+        kz = 0;
+        const N = numStiffPoints;   // alias
+        for (var ii = 1; ii < numStiffPoints; ++ii) {
+          kx += (lastForces[ii] - lastForces[ii-1])
+              /(lastPositions[ii] - lastPositions[ii-1]);
+          ky += (lastForces[ii+N] - lastForces[ii-1+N])
+              /(lastPositions[ii+N] - lastPositions[ii-1+N]);
+          kz += (lastForces[ii+2*N] - lastForces[ii-1+2*N])
+              /(lastPositions[ii+2*N] - lastPositions[ii-1+2*N]);
+        }
+        kx = kx / N;
+        ky = ky / N;
+        kz = kz / N;
+
+        return [kx, ky, kz];
+      }
+
       inputReset.onclick = function() {
 	position = [0, 0, 0];
 
@@ -164,8 +192,12 @@
 	  objParticle.position.y = position[2]*scale;
 	  render();
 
+    // Calculate stiffness estimate
+    //stiff = calculateStiffness();
+
     // Update infoPosition text
     infoPosition.innerHTML = `x = ${(position[0]*1e6).toFixed(2)}, ${(position[1]*1e6).toFixed(2)}, ${(position[2]*1e6).toFixed(2)} &mu;m <br>F = ${(force[0]*1e12).toFixed(2)}, ${(force[1]*1e12).toFixed(2)}, ${(force[2]*1e12).toFixed(2)} pN`;
+    //infoPosition.innerHTML += `<br>k = ${(stiff[0]*1e6).toFixed(2)}, ${(stiff[1]*1e6).toFixed(2)}, ${(stiff[2]*1e6).toFixed(2)} pN/&mu;m`;
   }
 
       function updateScene() {
@@ -189,6 +221,11 @@
 
 	    // Move the particle (store position)
 	    position[i] = position[i] + dx;
+
+      // Store values for stiffness calculation and increment index
+      //lastPositions[currStiffPoint+i*numStiffPoints] = position[i];
+      //lastForces[currStiffPoint+i*numStiffPoints] = force[i];
+      //currStiffPoint = (currStiffPoint + 1) % numStiffPoints;
 	  }
 
     // Update particle position and text

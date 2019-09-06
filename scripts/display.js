@@ -257,34 +257,44 @@
         scene.add( objParticle );
 
         // Draw the beam
-        var cylinder_height = 50;
-        var cylinder_segs = 20;
+        var cylinder_height = 0.1e-6;
+        var cylinder_segs = 40;
         objBeam = new THREE.Group();
+        objBeamFWHM = new THREE.Group();
         for (var i = 0; i < cylinder_segs; i++) {
 
           var z0 = (i-cylinder_segs/2-0.5)*cylinder_height;
           var z1 = (i+1-cylinder_segs/2-0.5)*cylinder_height;
 
-          var wn = 50;
-          var lambda = 100;
+          var lambda = 800e-9;
+          var wn = lambda / (Math.PI * Math.asin(1.02/1.3));
           var zR = Math.PI * wn * wn / lambda;
           var w0 = wn*Math.sqrt(1 + Math.pow(z0/zR, 2));
           var w1 = wn*Math.sqrt(1 + Math.pow(z1/zR, 2));
 
-          var geometry = new THREE.CylinderGeometry( w1, w0,
-              cylinder_height, 32, 2, true);
+          var geometry = new THREE.CylinderGeometry( w1*scale, w0*scale,
+              cylinder_height*scale, 32, 1, true);
           var material = new THREE.MeshBasicMaterial(
-              {color: 0xffaaaa, transparent: true, opacity: 0.5} );
+              {color: 0xffaaaa, transparent: true, opacity: 0.3,
+               side: THREE.FrontSide } );
           var cylinder = new THREE.Mesh( geometry, material );
-          cylinder.position.y = (z0+z1)/2;
+          cylinder.position.y = (z0+z1)/2*scale;
           objBeam.add(cylinder);
+
+          /*var sc = Math.sqrt(2 * Math.log(2));
+          var geometry = new THREE.CylinderGeometry( sc*w1*scale, sc*w0*scale,
+              cylinder_height*scale, 32, 1, true);
+          var cylinder = new THREE.Mesh( geometry, material );
+          cylinder.position.y = (z0+z1)/2*scale;
+          objBeamFWHM.add(cylinder);*/
         }
+        //scene.add(objBeamFWHM);
         scene.add(objBeam);
 
         // TODO: We need to do the simulation
 
-        // Draw line
-        var material = new THREE.LineBasicMaterial({
+        // Draw lin
+        /*var material = new THREE.LineBasicMaterial({
           color: 0x0000ff, transparent: true, opacity: 0.5
         });
         material.depthTest = false;
@@ -296,7 +306,7 @@
         );
         objTrace = new THREE.Line( geometry, material );
         objTrace.visible = false;  // Initially invisible
-        scene.add( objTrace );
+        scene.add( objTrace );*/
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );

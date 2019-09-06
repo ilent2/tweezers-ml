@@ -7,10 +7,6 @@
 // Toggles: Display particle, display trace, display incident beam
 // Buttons: Stop/Start, Reset
 
-      //if ( WEBGL.isWebGLAvailable() === false ) {
-		//		document.body.appendChild( WEBGL.getWebGLErrorMessage() );
-	//		}
-
       var container;
 
       var raycaster = new THREE.Raycaster();

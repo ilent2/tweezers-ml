@@ -281,7 +281,7 @@
 				//scene.add( shadowMesh );
 
         // Draw the sphere
-        var geometry = new THREE.SphereGeometry( 200, 32, 32 );
+        var geometry = new THREE.SphereGeometry( 1e-6*scale, 32, 32 );
         //var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
         objParticle = new THREE.Mesh( geometry, shadowMaterial );
 	objParticle.scale.x = radius;

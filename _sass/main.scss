@@ -1,0 +1,174 @@
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-size: 12pt;
+  margin: 0;
+}
+
+.main {
+  flex-grow: 1;
+}
+
+.header, .main, .footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.header .content, .main .content, .footer .content {
+  width: 100%;
+}
+
+@media only screen and (min-width: 920px) {
+  .main .content,
+      .footer .content,
+      .header .content {
+    width: 900px;
+  }
+}
+
+//
+// Header
+//
+
+.header .content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header nav {
+  display: none;
+}
+
+.header .hamburger {
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-bottom: 6px;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+}
+
+.header .hamburger div {
+  width: 35px;
+  height: 5px;
+  background-color: black;
+  margin: 6px 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .header .hamburger {
+    display: none;
+  }
+
+  .header nav {
+    display: block;
+  }
+
+  .header nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 0;
+  }
+
+  .header nav li {
+    padding-left: 20px;
+  }
+}
+
+//
+// Mobile menu
+//
+
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu.open {
+  display: block;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-menu li {
+  padding-top: 8px;
+  font-size: 14pt;
+}
+
+//
+// About page content
+//
+
+.sim-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sim-swatch {
+  width: 92%;
+  border: 1px solid lightgray;
+  padding-left: 10px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+
+.sim-swatch img {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  background: white;
+}
+
+@media only screen and (min-width: 768px) {
+  .sim-list {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+//
+// FOOTER
+//
+
+.footer .content {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-bottom: 5px;
+}
+
+.footer .content span {
+  padding-left: 5px;
+}
+
+@media only screen and (min-width: 768px) {
+  .footer .content {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+.footer, .footer a {
+  color: #999;
+}
+
+.footer a:hover {
+  color: black;
+}
+

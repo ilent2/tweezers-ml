@@ -1,154 +1,61 @@
-<!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+---
+layout: default
+title: About
+---
 
-    <!-- icon things from https://realfavicongenerator.net -->
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="manifest" href="images/site.webmanifest">
-    <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#f70000">
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="msapplication-config" content="images/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
+<p>
+This website presents three simulations demonstrating how
+machine learning enables fast optical tweezers simulations that
+can be run in most web browsers and on most smart phones.
+This work is part of the supplementary material for
+{% include citation.html %}
+</p>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+<div class="sim-list">
 
-<title>tweezers-ml | Interactive Optical Tweezers simulation using Machine Learning</title>
+  <a href="./sim1.html">
+  <div class="sim-swatch">
+    <img src="./images/sim1-swatch.png" alt="simulation 1 icon"/>
+    <h3>Simulation 1</h3>
+    <p>Simulate a particle in an optical trap.</p>
+  </div>
+  </a>
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="tweezers-ml" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Interactive Optical Tweezers simulation using Machine Learning" />
-<meta property="og:description" content="Interactive Optical Tweezers simulation using Machine Learning" />
-<link rel="canonical" href="https://ilent2.github.io/tweezers-ml/" />
-<meta property="og:url" content="https://ilent2.github.io/tweezers-ml/" />
-<meta property="og:site_name" content="tweezers-ml" />
-<script type="application/ld+json">
-{"@type":"WebSite","url":"https://ilent2.github.io/tweezers-ml/","headline":"tweezers-ml","name":"tweezers-ml","description":"Interactive Optical Tweezers simulation using Machine Learning","@context":"http://schema.org"}</script>
-<!-- End Jekyll SEO tag -->
+  <a href="./sim2.html">
+  <div class="sim-swatch">
+    <img src="./images/sim2-swatch.png" alt="simulation 2 icon"/>
+    <h3>Simulation 2</h3>
+    <p>Simulate a particle escaping an optical trap
+    once a flow is enabled.</p>
+  </div>
+  </a>
 
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/site.css">
-  </head>
-  <body>
-    <div class="container-lg px-3 my-5 markdown-body">
-      
+  <a href="./sim2.html">
+  <div class="sim-swatch">
+    <img src="./images/sim3-swatch.png" alt="simulation 3 icon"/>
+    <h3>Simulation 3</h3>
+    <p>Simulate a particle orbiting in a mixture of
+    Laguerre-Gaussian beams.</p>
+  </div>
+  </a>
 
-      <h1 id="tweezers-ml">tweezers-ml</h1>
-<p>Interactive Optical Tweezers simulation using Machine Learning</p>
+</div>
 
-      <h2 id="simulation">Simulation</h2>
 
-      <div id="error-container"></div>
-      <div class="sim" id="sim">
-        <div id="sim-container"></div>
-        <span class="info" id="sim-info"></span>
-        <span class="info" id="sim-info-position"></span>
-      </div>
+<h2>About</h2>
+<p>
+These simulations shows the optical forces acting on spherical
+particles in tightly focussed laser beams.  The forces are calculated
+using a pre-trained artificial neural networks, allowing for fast and
+accurate execution in-browser (on your phone or personal computer).
+The simulation using a finite difference method to simulate particle
+dynamics, accuracy of this method depends on simulation parameters,
+not all simulation parameters will produce physically accurate results.
+Training data was generated using the
+<a href="https://github.com/ilent2/ott">optical tweezers toolbox</a>.
+We used <a href="https://keras.io/">Keras</a> to train the neural
+network and <a href="https://www.tensorflow.org/js">TensorFlow.js</a>
+to evaluate the neural network in browser.
+For full details, see {% include citation.html %}
+</p>
 
-      <div id="controls">
-        <div class="row">
-          <button id="button-start-stop">Stop</button>
-          <button id="button-reset">Reset</button>
-        </div>
-        <div class="row">
-          <span class="text">Time step</span>
-          <input type="range" min="1" max="100" value="40"
-              class="slider" id="slider-step">
-        </div>
-        <div class="row">
-          <span class="text">Temperature</span>
-          <input type="range" min="1" max="100" value="50"
-              class="slider" id="slider-temperature">
-        </div>
-        <div class="row">
-          <span class="text">Radius</span>
-          <input type="range" min="1" max="100" value="50"
-              class="slider" id="slider-radius">
-        </div>
-        <div class="row">
-          <span class="text">Index</span>
-          <input type="range" min="1" max="100" value="50"
-              class="slider" id="slider-index">
-        </div>
-        <div class="row">
-          <span class="text">Power</span>
-          <input type="range" min="1" max="100" value="50"
-              class="slider" id="slider-power">
-        </div>
-        <div class="row">
-          <span class="text">
-            <label for="toggle-particle">Show particle</label>
-          </span>
-          <label class="switch" for="toggle-particle">
-            <input type="checkbox" id="toggle-particle" checked>
-            <span class="chkslider"></span>
-          </label>
-        </div>
-        <!--<div class="row">
-          <span class="text">
-            <label for="toggle-trace">Show trace</label>
-          </span>
-          <label class="switch" for="toggle-trace">
-            <input type="checkbox" id="toggle-trace">
-            <span class="chkslider"></span>
-          </label>
-	</div>-->
-        <div class="row">
-          <span class="text">
-            <label for="toggle-beam">Show incident beam</label>
-          </span>
-          <label class="switch" for="toggle-beam">
-            <input type="checkbox" id="toggle-beam" checked>
-            <span class="chkslider"></span>
-          </label>
-        </div>
-      </div>
-
-      <script src="./scripts/CheckBrowser.js"></script>
-      <script src="./scripts/three.js"></script>
-      <script src="./scripts/display.js"></script>
-	    
-      <h2>Instructions</h2>
-      <p>Use the sliders to change the simulation properties.  Click or touch
-	      on the screen to change the position of the particles.
-	      Use the Start&#47;Stop button to start&#47;stop the simulation and
-	      the Reset button to move the particle back to the centre.
-	      Note&#58; The touch screen functionality may not be properly calibrated
-	      on all phone versions.
-      </p>
-
-      <h2>About</h2>
-      <p>The above simulation shows the optical forces acting on a
-      spherical particle in a tightly focussed laser beam.
-      The forces are calculated using a pre-trained artificial
-      neural network, allowing for fast and accurate execution
-      in-browser (on your phone or personal computer).
-      The simulation using a finite difference method to simulate
-      particle dynamics, accuracy of this method depends on
-      simulation parameters, not all simulation parameters will
-      produce physically accurate results.
-      Training data was generated using the
-      <a href="https://github.com/ilent2/ott">optical tweezers toolbox</a>.
-      We used <a href="https://keras.io/">Keras</a>
-      to train the neural network and
-      <a href="https://www.tensorflow.org/js">TensorFlow.js</a> to evaluate
-      the neural network in browser.
-      For full details see PAPER LINK COMING SOON.</p>
-
-      
-      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
-        Created by Isaac Lenton, 2019.
-        This site is open source. <a href="https://github.com/ilent2/tweezers-ml/edit/master/index.html">Improve this page</a>.
-      </div>
-      
-    </div>
-    
-  </body>
-</html>

@@ -1,0 +1,9 @@
+
+- name: About
+  link: /
+- name: Sim 1
+  link: /sim1.html
+- name: Sim 2
+  link: /sim2.html
+- name: Sim 3
+  link: /sim3.html

@@ -24,7 +24,8 @@ We used [Keras](https://keras.io/)
 to train the neural network and
 [TensorFlow.js](https://www.tensorflow.org/js) to evaluate
 the neural network in browser.
-For full details see PAPER LINK COMING SOON.
+For full details see [*Machine learning reveals complex behaviours in optically
+trapped particles*, Machine Learning Science and Technology, 2020](https://doi.org/10.1088/2632-2153/abae76).
 
 ## Future plans
 
